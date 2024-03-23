@@ -18,8 +18,18 @@
         "maintenance",
         "doc"
       ]
+    },
+    {
+      "login": "cquoss",
+      "name": "Clemens Quoss",
+      "avatar_url": "https://avatars.githubusercontent.com/u/17934067?v=4",
+      "profile": "https://github.com/cquoss",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "commitConvention": "angular",
-  "contributorsPerLine": 7
+  "contributorsPerLine": 7,
+  "commitType": "docs"
 }
