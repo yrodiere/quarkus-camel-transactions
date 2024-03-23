@@ -15,7 +15,7 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.scheduler
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sql;
 
 @Singleton
-public class ReadThenTruncateThenTransfer extends RouteBuilder {
+public class ReadThenCleanThenTransfer extends RouteBuilder {
   public static final String QUERY = "query";
 
   private final AgroalDataSource source;
@@ -23,7 +23,8 @@ public class ReadThenTruncateThenTransfer extends RouteBuilder {
   private final ToQueryTransformer toQueryTransformer;
 
   @Inject
-  public ReadThenTruncateThenTransfer(
+  @SuppressWarnings("unused")
+  public ReadThenCleanThenTransfer(
       @SuppressWarnings("CdiInjectionPointsInspection")
       @DataSource("source") AgroalDataSource source,
 
@@ -32,7 +33,7 @@ public class ReadThenTruncateThenTransfer extends RouteBuilder {
     this(source, target, ToQueryTransformer.instance());
   }
 
-  ReadThenTruncateThenTransfer(AgroalDataSource source, AgroalDataSource target,
+  ReadThenCleanThenTransfer(AgroalDataSource source, AgroalDataSource target,
       ToQueryTransformer toQueryTransformer) {
     this.source = source;
     this.target = target;

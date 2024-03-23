@@ -11,7 +11,9 @@ The application consists of a single camel route that transfers data from one da
   @Override
   public void configure() {
     // @formatter:off
-    from(scheduler("read-clean-write").delay(Duration.ofSeconds(10).toMillis()))
+    from(
+        scheduler("read-clean-write")
+            .delay(Duration.ofSeconds(10).toMillis()))
         .id("scheduler -> db read -> db clean -> db write")
         .log("reading...")
         .transacted()
