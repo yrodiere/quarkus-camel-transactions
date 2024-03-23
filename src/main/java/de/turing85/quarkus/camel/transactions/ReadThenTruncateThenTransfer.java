@@ -2,8 +2,8 @@ package de.turing85.quarkus.camel.transactions;
 
 import java.time.Duration;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 import io.agroal.api.AgroalDataSource;
 import io.quarkus.agroal.DataSource;
@@ -14,17 +14,13 @@ import org.apache.camel.component.sql.SqlOutputType;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.scheduler;
 import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sql;
 
-@ApplicationScoped
+@Singleton
 public class ReadThenTruncateThenTransfer extends RouteBuilder {
   public static final String QUERY = "query";
 
   private final AgroalDataSource source;
   private final AgroalDataSource target;
   private final ToQueryTransformer toQueryTransformer;
-
-  protected ReadThenTruncateThenTransfer() {
-    this(null, null, null);
-  }
 
   @Inject
   public ReadThenTruncateThenTransfer(
