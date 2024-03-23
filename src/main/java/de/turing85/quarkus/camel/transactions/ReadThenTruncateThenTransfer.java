@@ -37,7 +37,9 @@ public class ReadThenTruncateThenTransfer extends RouteBuilder {
   @Override
   public void configure() {
     // @formatter:off
-    from(scheduler("read-clean-write").delay(Duration.ofSeconds(10).toMillis()))
+    from(
+        scheduler("read-clean-write")
+            .delay(Duration.ofSeconds(10).toMillis()))
         .id("scheduler -> db read -> db clean -> db write")
         .log("reading")
         .transacted()
