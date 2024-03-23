@@ -3,6 +3,7 @@ package de.turing85.quarkus.camel.transactions;
 import java.time.Duration;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import io.agroal.api.AgroalDataSource;
 import io.quarkus.agroal.DataSource;
@@ -21,13 +22,21 @@ public class ReadThenTruncateThenTransfer extends RouteBuilder {
   private final AgroalDataSource target;
   private final ToQueryTransformer toQueryTransformer;
 
+  protected ReadThenTruncateThenTransfer() {
+    this(null, null, null);
+  }
+
+  @Inject
   public ReadThenTruncateThenTransfer(
       @SuppressWarnings("CdiInjectionPointsInspection")
       @DataSource("source") AgroalDataSource source,
 
       @SuppressWarnings("CdiInjectionPointsInspection")
-      @DataSource("target") AgroalDataSource target,
+      @DataSource("target") AgroalDataSource target) {
+    this(source, target, ToQueryTransformer.instance());
+  }
 
+  ReadThenTruncateThenTransfer(AgroalDataSource source, AgroalDataSource target,
       ToQueryTransformer toQueryTransformer) {
     this.source = source;
     this.target = target;
@@ -41,7 +50,7 @@ public class ReadThenTruncateThenTransfer extends RouteBuilder {
         scheduler("read-clean-write")
             .delay(Duration.ofSeconds(10).toMillis()))
         .id("scheduler -> db read -> db clean -> db write")
-        .log("reading")
+        .log("reading...")
         .transacted()
         .to(sql("SELECT * FROM data")
             .dataSource(source)

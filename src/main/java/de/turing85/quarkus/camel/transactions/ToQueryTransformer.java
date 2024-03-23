@@ -4,13 +4,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jakarta.inject.Singleton;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
-@Singleton
-public class ToQueryTransformer implements Processor {
+class ToQueryTransformer implements Processor {
+  private static final ToQueryTransformer INSTANCE = new ToQueryTransformer();
+
+  private ToQueryTransformer() {}
+
+  public static ToQueryTransformer instance() {
+    return INSTANCE;
+  }
+
   @Override
   public void process(Exchange exchange) {
     Object body = exchange.getIn().getBody();
