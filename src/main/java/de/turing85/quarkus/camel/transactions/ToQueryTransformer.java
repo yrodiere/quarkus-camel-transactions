@@ -21,7 +21,7 @@ public class ToQueryTransformer implements Processor {
         exchange.getIn().setBody("");
       }
       // @formatter:off
-      String builder="INSERT INTO DATA(ID, NAME) VALUES " +
+      String builder = "INSERT INTO DATA(ID, NAME) VALUES " +
           results.stream()
               .map(result -> "(%s, '%s')".formatted(result.get("ID"), result.get("NAME")))
               .collect(Collectors.joining(","));
