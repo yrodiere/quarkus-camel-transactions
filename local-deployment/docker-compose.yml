@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  postgres-source:
+    image: docker.io/postgres:16.2-alpine3.19
+    volumes:
+      - ${LOCAL_DEPLOYMENT_DIR:-.}/postgres-source/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+  postgres-target:
+    image: docker.io/postgres:16.2-alpine3.19
+    volumes:
+      - ${LOCAL_DEPLOYMENT_DIR:-.}/postgres-target/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d/:ro
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "6432:5432"
