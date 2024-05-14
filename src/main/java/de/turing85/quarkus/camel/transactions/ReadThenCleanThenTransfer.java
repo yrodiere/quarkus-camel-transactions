@@ -16,7 +16,8 @@ import static org.apache.camel.builder.endpoint.StaticEndpointBuilders.sql;
 
 @Singleton
 public class ReadThenCleanThenTransfer extends RouteBuilder {
-  public static final String QUERY = "query";
+  public static final String INSERT_QUERY = "insertQuery";
+  public static final String DELETE_QUERY = "deleteQuery";
 
   private final AgroalDataSource source;
   private final AgroalDataSource target;
@@ -45,11 +46,11 @@ public class ReadThenCleanThenTransfer extends RouteBuilder {
     // @formatter:off
     from(
         scheduler("read-clean-write")
-            .delay(Duration.ofSeconds(10).toMillis()))
+            .delay(Duration.ofSeconds(2).toMillis()))
         .id("scheduler -> db read -> db clean -> db write")
         .log("reading...")
         .transacted()
-        .to(sql("SELECT * FROM data")
+        .to(sql("SELECT * FROM data LIMIT 2")
             .dataSource(source)
             .outputType(SqlOutputType.SelectList))
         .log("done")
@@ -57,17 +58,20 @@ public class ReadThenCleanThenTransfer extends RouteBuilder {
             .when(header(SqlConstants.SQL_ROW_COUNT).isGreaterThan(0))
                 .log("${headers.%s} entries to transfer".formatted(SqlConstants.SQL_ROW_COUNT))
                 .process(toQueryTransformer)
-                .setProperty(QUERY, simple("${body}"))
+                .setProperty(INSERT_QUERY, simple("${body.insert}"))
+                .setProperty(DELETE_QUERY, simple("${body.delete}"))
                 .log("deleting...")
-                .to(sql("DELETE FROM data")
-                    .dataSource(source))
+                    .setBody(exchangeProperty(DELETE_QUERY))
+                    .to(sql("query-in-body")
+                        .dataSource(source)
+                        .useMessageBodyForSql(true))
                 .log("done")
                 .log("transferring...")
-                .setBody(exchangeProperty(QUERY))
-                .removeProperty(QUERY)
-                .to(sql("query-in-body")
-                    .dataSource(target)
-                    .useMessageBodyForSql(true))
+                    .setBody(exchangeProperty(INSERT_QUERY))
+                    .removeProperty(INSERT_QUERY)
+                    .to(sql("query-in-body")
+                        .dataSource(target)
+                        .useMessageBodyForSql(true))
                 .log("done")
             .otherwise()
                 .log("No entries to transfer");

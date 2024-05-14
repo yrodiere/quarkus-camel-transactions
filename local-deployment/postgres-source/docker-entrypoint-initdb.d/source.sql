@@ -6,4 +6,7 @@ CREATE TABLE data(
 INSERT INTO data(ID, NAME)
     VALUES
         (0, 'Hello'),
-        (1, 'World');
+        (1, 'World'),
+        (2, 'World2'),
+        (3, 'World3'),
+        (4, 'World4');
