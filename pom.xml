@@ -20,8 +20,8 @@
 
         <!-- Quarkus versions -->
         <quarkus.platform.artifact-id>quarkus-bom</quarkus.platform.artifact-id>
-        <quarkus.platform.group-id>io.quarkus.platform</quarkus.platform.group-id>
-        <quarkus.platform.version>3.8.2</quarkus.platform.version>
+        <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
+        <quarkus.platform.version>999-SNAPSHOT</quarkus.platform.version>
 
         <!-- Test dependency versions -->
         <truth.version>1.4.2</truth.version>
@@ -256,9 +256,9 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>${quarkus.platform.group-id}</groupId>
+                <groupId>io.quarkus.platform</groupId>
                 <artifactId>quarkus-camel-bom</artifactId>
-                <version>${quarkus.platform.version}</version>
+                <version>3.8.2</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
